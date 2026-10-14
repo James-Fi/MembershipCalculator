@@ -8,9 +8,9 @@
 using namespace std;
 
 struct MembershipTier {
-	char key;
 	double price;
-	string description;
+	char key;
+	string name;
 };
 
 struct DiscountTier {
@@ -18,7 +18,7 @@ struct DiscountTier {
 	double discountRate;
 };
 
-double getMonthlyRate(const vector<MembershipTier>& mTier);
+pair <string, double> getMonthlyRate(const vector<MembershipTier>& mTier);
 char validateCharacter(string errorMessage);
 int getMonths(string prompt, int lowest, int highest);
 int validateNumber();
@@ -29,9 +29,9 @@ bool getConfirmation(string prompt);
 vector<MembershipTier> pricingData() {
 	// Stores membership and pricing data.
 	return {
-		{'S', 24.50, "'S' for Standard."},
-		{'P', 34.00, "'P' for Peak."},
-		{'F', 52.75, "'F' for Family."}
+		{24.50, 'S', "Standard"},
+		{34.00, 'P', "Peak"},
+		{52.75, 'F', "Family"},
 	};
 }
 
@@ -60,7 +60,7 @@ int main() {
 		cout << endl << "Member Name: ";
 		getline(cin, memberName);
 
-		double monthlyRate = getMonthlyRate(mTier);
+		auto [memberTier, monthlyRate] = getMonthlyRate(mTier);
 		int months = getMonths("Number of Months (1 to 24): ", 1, 24);
 
 		auto [discountRate, discountPercent] = getDiscount(months, dData);
@@ -70,7 +70,7 @@ int main() {
 		totalQuotedRevenue += totalCost;
 		quotesGiven++;
 
-		cout << endl << "Monthly Rate: \x9c" << monthlyRate << "." << endl;
+		cout << endl << "Monthly Rate for " << memberTier << " members: \x9c" << monthlyRate << "." << endl;
 
 		if (discountApplied) {
 			cout << "Loyalty discount: " << discountPercent << "% - \x9c" << discountTotal << " saved." << endl;
@@ -87,11 +87,11 @@ int main() {
 	cout << "Total revenue quoted: \x9c" << totalQuotedRevenue << "." << endl;
 }
 
-double getMonthlyRate(const vector<MembershipTier>& mTier) {
+pair <string, double> getMonthlyRate(const vector<MembershipTier>& mTier) {
 	string errorMessage = "Unrecognised membership tier, try again: ";
 	cout << "Available membership tiers" << endl << endl;
 	for (const auto& tier : mTier) {
-		cout << tier.description << endl;
+		cout << tier.key << " for " << tier.name << "." << endl;
 	}
 
 	while (true) {
@@ -99,7 +99,7 @@ double getMonthlyRate(const vector<MembershipTier>& mTier) {
 		char input = validateCharacter(errorMessage);
 		for (const auto& tier : mTier) {
 			if (tier.key == input) {
-				return tier.price;
+				return { tier.name, tier.price };
 			}
 		}
 		cout << errorMessage << endl;

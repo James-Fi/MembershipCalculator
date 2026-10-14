@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="MembershipCalculator.vcxproj" />
+  <Project Path="MembershipCalculator.vcxproj" Id="f652954c-6c61-42c5-84e1-94034e62132c" />
 </Solution>
