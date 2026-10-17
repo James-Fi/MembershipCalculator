@@ -90,16 +90,16 @@ int main() {
 pair <string, double> getMonthlyRate(const vector<MembershipTier>& mTier) {
 	string errorMessage = "Unrecognised membership tier, try again: ";
 	cout << "Available membership tiers" << endl << endl;
-	for (const auto& tier : mTier) {
-		cout << tier.key << " for " << tier.name << "." << endl;
+	for (const auto& x : mTier) {
+		cout << x.key << " for " << x.name << "." << endl;
 	}
 
 	while (true) {
 		cout << endl << "Member Tier: ";
 		char input = validateCharacter(errorMessage);
-		for (const auto& tier : mTier) {
-			if (tier.key == input) {
-				return { tier.name, tier.price };
+		for (const auto& x : mTier) {
+			if (x.key == input) {
+				return { x.name, x.price };
 			}
 		}
 		cout << errorMessage << endl;
@@ -160,7 +160,7 @@ int validateNumber() {
 }
 
 pair <double, int> getDiscount(int months, const auto& dData) {
-	for (const auto x : dData) {
+	for (const auto& x : dData) {
 		if (months >= x.months) {
 			return { x.discountRate, static_cast<int>(x.discountRate * 100) };
 		}
