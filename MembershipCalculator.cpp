@@ -7,6 +7,7 @@
 
 using namespace std;
 
+// Declaring structures for membership and discount data.
 struct MembershipTier {
 	double price;
 	char key;
@@ -18,6 +19,7 @@ struct DiscountTier {
 	double discountRate;
 };
 
+// Declaring function prototypes.
 pair <string, double> getMonthlyRate(const vector<MembershipTier>& mTier);
 char validateCharacter(string errorMessage);
 int getMonths(string prompt, int lowest, int highest);
@@ -45,10 +47,6 @@ vector<DiscountTier> discountData() {
 }
 
 int main() {
-	// Initialises vectors containing Membership tiers and Monthly Rates.
-	auto mTier = pricingData();
-	auto dData = discountData();
-
 	int quotesGiven = 0;
 	double totalQuotedRevenue = 0.0;
 
@@ -59,20 +57,22 @@ int main() {
 		string memberName;
 		cout << endl << "Member Name: ";
 		getline(cin, memberName);
-
-		auto [memberTier, monthlyRate] = getMonthlyRate(mTier);
+		
+		// Takes user inputs.
+		auto [memberTier, monthlyRate] = getMonthlyRate(pricingData());
 		int months = getMonths("Number of Months (1 to 24): ", 1, 24);
 
-		auto [discountRate, discountPercent] = getDiscount(months, dData);
-		bool discountApplied = (discountRate > 0.0);
+		// Calculates total cost and discount total.
+		auto [discountRate, discountPercent] = getDiscount(months, discountData());
 		auto [totalCost, discountTotal] = calculateTotalCost(monthlyRate, discountRate, months);
 
 		totalQuotedRevenue += totalCost;
 		quotesGiven++;
 
+		// Outputs totals.
 		cout << endl << "Monthly Rate for " << memberTier << " members: \x9c" << monthlyRate << "." << endl;
 
-		if (discountApplied) {
+		if (discountRate > 0.0) {
 			cout << "Loyalty discount: " << discountPercent << "% - \x9c" << discountTotal << " saved." << endl;
 		}
 		else {
@@ -88,6 +88,7 @@ int main() {
 }
 
 pair <string, double> getMonthlyRate(const vector<MembershipTier>& mTier) {
+	// Returns name and price of entered membership key.
 	string errorMessage = "Unrecognised membership tier, try again: ";
 	cout << "Available membership tiers" << endl << endl;
 	for (const auto& x : mTier) {
@@ -160,6 +161,7 @@ int validateNumber() {
 }
 
 pair <double, int> getDiscount(int months, const auto& dData) {
+	// Compares months to discount data, returns discount rate and percentage.
 	for (const auto& x : dData) {
 		if (months >= x.months) {
 			return { x.discountRate, static_cast<int>(x.discountRate * 100) };
@@ -169,6 +171,7 @@ pair <double, int> getDiscount(int months, const auto& dData) {
 }
 
 pair <double, double> calculateTotalCost(double monthlyRate, double discountRate, int months) {
+	// Calculates total cost and applies discount, returns discounted price and discounted total.
 	double beforeDiscount = monthlyRate * months;
 	double discountTotal = beforeDiscount * discountRate;
 
