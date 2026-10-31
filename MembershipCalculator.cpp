@@ -95,15 +95,15 @@ pair <string, double> getMonthlyRate(const vector<MembershipTier>& mTier) {
 		cout << x.key << " for " << x.name << "." << endl;
 	}
 
+	cout << endl << "Member Tier: ";
 	while (true) {
-		cout << endl << "Member Tier: ";
 		char input = validateCharacter(errorMessage);
 		for (const auto& x : mTier) {
 			if (x.key == input) {
 				return { x.name, x.price };
 			}
 		}
-		cout << errorMessage << endl;
+		cout << errorMessage;
 	}
 }
 
